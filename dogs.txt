@@ -1,0 +1,2 @@
+snoopy.gif,Charlie Brown,Snoopy,dog,snoopy
+bluey.gif,Bandit Heeler,Bluey,dog,sister,dancing
