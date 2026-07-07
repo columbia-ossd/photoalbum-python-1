@@ -15,3 +15,7 @@ The file "dogs.txt" contains the listing of photos and their info.
 
 "graphics.py" is a graphics library that should work on different platforms.
 
+# Communication
+The Slack channel for this project is _#photoalbum-python-1_
+
+Please use that channel for communicating with other contributors.
