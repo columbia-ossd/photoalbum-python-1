@@ -134,7 +134,10 @@ def removePhoto(album):
     
     chosen_photo = photos[choice-1]
     if album.remove_photo(chosen_photo):
-        print("Photo successfully removed")
+        print("Photo successfully removed\n")
+        print("\nCurrent Album state:")
+        for photo in album.get_photos():
+              print(str(photo))
     else:
         print("Could not remove photo to album")
 
