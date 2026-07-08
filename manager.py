@@ -36,7 +36,8 @@ def menu():
     print("2: Add a photo")
     print("3: Search photos by tag")
     print("4: View a photo")
-    print("5: Exit")
+    print("5: Remove a photo")
+    print("6: Exit")
 
     choice = get_value_between("Choose an option: ", 1, 5)
     return choice
@@ -116,6 +117,28 @@ def addPhoto(album):
         print("Could not add photo to album")
 
 
+
+def removePhoto(album):
+    """
+    Function for Menu Option 5
+    """
+    print()
+    photos = album.get_photos()
+    if not photos:
+        print("This album is empty.")
+        return
+    for i in range(len(photos)):
+        print("%d: %s"  % (i+1, photos[i].get_description()))
+
+    choice = get_value_between("Choose a photo: ", 1, len(photos))
+    
+    chosen_photo = photos[choice-1]
+    if album.remove_photo(chosen_photo):
+        print("Photo successfully removed")
+    else:
+        print("Could not remove photo to album")
+
+
 def main():
     album = initialize("dogs.txt", "cartoon dog photos")
 
@@ -132,6 +155,8 @@ def main():
             searchByTag(album)
         elif choice == 4: # view a photo
             viewPhoto(album)
+        elif choice == 5: # remove a photo
+            removePhoto(album)
     
     print("Good bye!")
 

@@ -9,6 +9,10 @@ class Album():
         self.name = name
         self.photos = []
 
+    def __iter__(self):
+        # Returns an iterator for the photos list
+        return iter(self.photos)
+
     def get_name(self):
         return self.name
 
@@ -17,6 +21,14 @@ class Album():
             if photo.get_description() == p.get_description() or photo.get_filename() == p.get_filename():
                 return False
         self.photos.append(p)
+        return True
+    
+    def remove_photo(self, p):
+        for photo in self.photos:
+            if photo.get_description() == p.get_description() or photo.get_filename() == p.get_filename():
+                self.photos.remove(photo)
+                return True    
+        self.photos.pop(p)
         return True
 
     def get_photos(self):
