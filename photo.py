@@ -20,6 +20,15 @@ class Photo():
     def get_description(self):
         return self.description
     
+    def set_filename(self, filename):
+        self.filename = filename
+
+    def set_creator(self, creator):
+        self.creator = creator
+
+    def set_description(self, description):
+        self.description = description
+    
     def add_tag(self, tag):
         if tag not in self.tags:
             self.tags.append(tag)

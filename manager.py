@@ -1,3 +1,5 @@
+import os
+
 from photo import Photo
 from album import Album
 from graphics import *
@@ -30,16 +32,33 @@ def initialize(filename, title):
 
     return album
 
+def save_album(album, filename):
+    """
+    Write all photo information in the album back to the input file.
+    """
+    with open(filename, "w") as fp:
+        for photo in album.get_photos():
+            values = [
+                photo.get_filename(),
+                photo.get_creator(),
+                photo.get_description()
+            ]
+            values.extend(photo.get_tags())
+            fp.write(",".join(values) + "\n")
+
 def menu():
     print()
     print("1: List all photos")
     print("2: Add a photo")
     print("3: Search photos by tag")
     print("4: View a photo")
-    print("5: Exit")
+    print("5: Edit photo info")
+    print("6: Exit")
 
-    choice = get_value_between("Choose an option: ", 1, 5)
+    choice = get_value_between("Choose an option: ", 1, 6)
+
     return choice
+
 
 def viewPhoto(album):
     """
@@ -115,24 +134,94 @@ def addPhoto(album):
     else:
         print("Could not add photo to album")
 
+def editPhoto(album, input_filename):
+    """
+    Allow the user to edit a photo's filename, creator,
+    and description, then save the updated album.
+    """
+    photos = album.get_photos()
+
+    if len(photos) == 0:
+        print("There are no photos to edit.")
+        return
+
+    print()
+    print("Edit Photo")
+
+    for i in range(len(photos)):
+        print("%d: %s" % (i + 1, photos[i].get_description()))
+
+    choice = get_value_between(
+        "Choose a photo to edit: ",
+        1,
+        len(photos)
+    )
+
+    photo = photos[choice - 1]
+
+    print("Press Enter to keep the current value.")
+
+    while True:
+        new_filename = input(
+            "Filename [%s]: " % photo.get_filename()
+        ).strip()
+
+        if new_filename == "":
+            new_filename = photo.get_filename()
+
+        if os.path.isfile(new_filename):
+            break
+
+        print("The photo file does not exist. Please enter a valid filename.")
+
+    new_creator = input(
+        "Creator [%s]: " % photo.get_creator()
+    ).strip()
+
+    if new_creator == "":
+        new_creator = photo.get_creator()
+
+    new_description = input(
+        "Description [%s]: " % photo.get_description()
+    ).strip()
+
+    if new_description == "":
+        new_description = photo.get_description()
+
+    photo.set_filename(new_filename)
+    photo.set_creator(new_creator)
+    photo.set_description(new_description)
+
+    save_album(album, input_filename)
+
+    print("Photo information successfully updated.")
+
 
 def main():
-    album = initialize("dogs.txt", "cartoon dog photos")
+    input_filename = "dogs.txt"
+    album = initialize(input_filename, "cartoon dog photos")
 
     choice = -1
 
-    while choice != 5:
+    while choice != 6:
         choice = menu()
-        if choice == 1: # list all photos
+
+        if choice == 1:  # list all photos
             for photo in album.get_photos():
-              print(str(photo))
-        elif choice == 2: # add a photo
+                print(str(photo))
+
+        elif choice == 2:  # add a photo
             addPhoto(album)
-        elif choice == 3: # search by tag
+
+        elif choice == 3:  # search by tag
             searchByTag(album)
-        elif choice == 4: # view a photo
+
+        elif choice == 4:  # view a photo
             viewPhoto(album)
-    
+
+        elif choice == 5:  # edit photo info
+            editPhoto(album, input_filename)
+
     print("Good bye!")
 
 
