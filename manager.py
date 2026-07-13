@@ -207,7 +207,7 @@ def main():
         choice = menu()
 
         if choice == 1:  # list all photos
-            for photo in album.get_photos():
+            for photo in album.get_photos_sorted_by_description():
                 print(str(photo))
 
         elif choice == 2:  # add a photo
