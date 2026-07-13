@@ -50,7 +50,7 @@ def menu():
     print()
     print("1: List all photos")
     print("2: Add a photo")
-    print("3: Search photos by tag")
+    print("3: Search photos by tag(s)")
     print("4: View a photo")
     print("5: Edit photo info")
     print("6: Exit")
@@ -98,18 +98,42 @@ def searchByTag(album):
     print()
     tags = " ".join(album.get_tags())
     print("Here are the tags: " + tags)
-    term = input("Enter the tag to search for: ").lower()
-    found = []
+    terms = input("Enter the tag(s) to search for, separated by spaces: ").lower().split()
+
+    if len(terms) == 0:
+        print("No tags entered")
+        return
+
+    matched_all = []
+    matched_some = []
     for photo in album.get_photos():
-        if term in photo.get_tags():
-            found.append(photo)
-    if len(found) > 0:
-        print("Here are the photos for that tag:")
-        for photo in found:
+        matches = 0
+        for term in terms:
+            if term in photo.get_tags():
+                matches = matches + 1
+        if matches == len(terms):
+            matched_all.append(photo)
+        elif matches > 0:
+            matched_some.append(photo)
+
+    if len(matched_all) == 0 and len(matched_some) == 0:
+        print("No photos found for: " + " ".join(terms))
+        return
+
+    if len(matched_all) > 0:
+        if len(terms) > 1:
+            print("Here are the photos with all of those tags:")
+        else:
+            print("Here are the photos for that tag:")
+        for photo in matched_all:
             print(str(photo))
-    else:
-        print("No photos found for tag " + term)
-    
+
+    if len(matched_some) > 0:
+        print("Here are the photos with some of those tags:")
+        for photo in matched_some:
+            print(str(photo))
+
+
 
 def get_input(prompt):
     resp = ""
