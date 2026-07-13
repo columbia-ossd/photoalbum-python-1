@@ -5,11 +5,21 @@ from album import Album
 from graphics import *
 
 def get_value_between(prompt, low, high):
-    choice = int(input(prompt))
-    while choice < low or choice > high:
-        print("Please enter a value between %d and %d" % (low, high))
-        choice = int(input(prompt))
-    return choice
+    while True:
+        try:
+            orig = input(prompt)
+        except KeyboardInterrupt:
+            print("\nInput interrupted. Please try again.")
+            continue
+        try:
+            choice = int(orig)
+        except ValueError:
+            print("Invalid input. Please enter an integer.")
+        else:
+            if low <= choice <= high:
+                return choice
+            else:
+                print("Please enter a value between %d and %d" % (low, high))
 
 
 def initialize(filename, title):
@@ -53,9 +63,10 @@ def menu():
     print("3: Search photos by tag")
     print("4: View a photo")
     print("5: Edit photo info")
-    print("6: Exit")
+    print("6: Remove a photo")
+    print("7: Exit")
 
-    choice = get_value_between("Choose an option: ", 1, 6)
+    choice = get_value_between("Choose an option: ", 1, 7)
 
     return choice
 
@@ -134,6 +145,45 @@ def addPhoto(album):
     else:
         print("Could not add photo to album")
 
+def removePhoto(album, filename):
+    """
+    Allow the user to remove a photo from the album, then save the updated album.
+    """
+    photos = album.get_photos()
+
+    if len(photos) == 0:
+        print("There are no photos to remove.")
+        return
+
+    print()
+    print("Remove Photo")
+
+    for i in range(len(photos)):
+        print("%d: %s" % (i + 1, photos[i].get_description()))
+
+    choice = get_value_between(
+        "Choose a photo to remove: ",
+        1,
+        len(photos)
+    )
+
+    photo = photos[choice - 1]
+
+    confirm = input("Are you sure you want to delete %s? (y/n) "
+                     % photo.get_description()).strip().lower()
+    if confirm != "y":
+        print("Cancelled. No photo was removed.")
+        return
+
+    if album.remove_photo(photo):
+        save_album(album, filename)
+        print("Photo successfully removed.\n")
+        for photo in album.get_photos():
+            print(str(photo))
+
+    else:
+        print("Could not remove photo from album.")
+
 def editPhoto(album, input_filename):
     """
     Allow the user to edit a photo's filename, creator,
@@ -203,7 +253,7 @@ def main():
 
     choice = -1
 
-    while choice != 6:
+    while choice != 7:
         choice = menu()
 
         if choice == 1:  # list all photos
@@ -221,6 +271,10 @@ def main():
 
         elif choice == 5:  # edit photo info
             editPhoto(album, input_filename)
+        
+        elif choice == 6: # remove a photo
+            removePhoto(album, input_filename)
+
 
     print("Good bye!")
 
