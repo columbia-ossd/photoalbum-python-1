@@ -21,6 +21,9 @@ class Album():
 
     def get_photos(self):
         return self.photos
+
+    def get_photos_sorted_by_description(self):
+        return sorted(self.photos, key=lambda p: p.get_description().lower())
     
     def get_count(self):
         return len(self.photos)
