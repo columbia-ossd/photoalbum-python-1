@@ -1,4 +1,5 @@
 import os
+import sys
 
 from photo import Photo
 from album import Album
@@ -198,8 +199,21 @@ def editPhoto(album, input_filename):
 
 
 def main():
-    input_filename = "dogs.txt"
-    album = initialize(input_filename, "cartoon dog photos")
+    if len(sys.argv) > 1:
+        input_filename = sys.argv[1]
+    else:
+        input_filename = input("Enter the input file name: ")
+
+    while True:
+        try:
+            album = initialize(
+                input_filename,
+                "cartoon dog photos"
+            )
+            break
+        except OSError:
+            print("The file could not be read.")
+            input_filename = input("Enter the input file name: ")
 
     choice = -1
 
