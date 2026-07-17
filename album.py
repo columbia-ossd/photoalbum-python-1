@@ -18,6 +18,13 @@ class Album():
                 return False
         self.photos.append(p)
         return True
+    
+    def remove_photo(self, p):
+        for photo in self.photos:
+            if photo.get_description() == p.get_description() or photo.get_filename() == p.get_filename():
+                self.photos.remove(photo)
+                return True
+        return False
 
     def get_photos(self):
         return self.photos
@@ -42,6 +49,7 @@ class Album():
         for tag in self.get_tags():
             res = res + "#" + tag + " "
         return res
+
     
 
 def main():
