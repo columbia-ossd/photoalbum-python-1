@@ -287,7 +287,7 @@ def editTagsAlbum(album, input_filename):
     cleaned_new_tag_list = []
     for tag in new_tag_list:
         if tag.strip():
-            cleaned_new_tag_list.append(tag)
+            cleaned_new_tag_list.append(tag.strip())
     chosen_photo.edit_tags(cleaned_new_tag_list, input_filename)
     new_photo_tags = chosen_photo.get_tags()
     print("Tags edited!")
