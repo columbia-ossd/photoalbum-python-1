@@ -36,6 +36,30 @@ class Photo():
     def get_tags(self):
         return self.tags
 
+    def edit_tags(self, new_tags_list, input_filename):
+        self.tags = []
+        for tag in new_tags_list:
+            self.tags.append(tag)
+        else:
+            with open(input_filename, "r") as input_file:
+                lines = input_file.readlines()
+                for index, line in enumerate(lines):
+                    parts = line.split(",")
+                    fname = parts[0]
+                    if fname == self.filename: #Find the right line to edit
+                        new_line = ""
+                        for x in range(3): #Add all parts of line before tag as is
+                            new_line += (parts[x] + ",")
+                        for tags_index, tag in enumerate(new_tags_list):                            
+                            if tags_index != len(new_tags_list) - 1: #If not the last tag in list, add tag + ","
+                                new_line += (tag + ",")
+                            else:
+                                new_line += (tag + "\n") #If last tag, add tag and newline
+                        lines[index] = new_line
+                        break
+            with open(input_filename, "w") as output_file: #Edit tags in input file                        
+                output_file.writelines(lines)
+        return
 
     def __str__(self):
         val = "%s, created by %s " % (self.description, self.creator)
