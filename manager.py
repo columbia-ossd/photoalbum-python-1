@@ -65,9 +65,10 @@ def menu():
     print("4: View a photo")
     print("5: Edit photo info")
     print("6: Remove a photo")
-    print("7: Exit")
+    print("7: Edit a photo's tags")
+    print("8: Exit")
 
-    choice = get_value_between("Choose an option: ", 1, 7)
+    choice = get_value_between("Choose an option: ", 1, 8)
 
     return choice
 
@@ -271,6 +272,27 @@ def editPhoto(album, input_filename):
 
     print("Photo information successfully updated.")
 
+def editTagsAlbum(album, input_filename):
+    """
+    Function for Menu Option 5
+    """
+    print()
+    photos = album.get_photos()
+    for i in range(len(photos)):
+        print("%d: %s"  % (i+1, photos[i].get_description()))
+    choice = get_value_between("Choose a photo to edit tags: ", 1, len(photos))
+    chosen_photo = photos[choice - 1]
+    new_tag_set = input("Enter the new tags for this photo, separated by commas: ").lower()
+    new_tag_list = new_tag_set.split(",")
+    cleaned_new_tag_list = []
+    for tag in new_tag_list:
+        if tag.strip():
+            cleaned_new_tag_list.append(tag.strip())
+    chosen_photo.edit_tags(cleaned_new_tag_list, input_filename)
+    new_photo_tags = chosen_photo.get_tags()
+    print("Tags edited!")
+    print("New tags: ", new_photo_tags)
+
 
 def main():
     if len(sys.argv) > 1:
@@ -291,7 +313,7 @@ def main():
 
     choice = -1
 
-    while choice != 7:
+    while choice != 8:
         choice = menu()
 
         if choice == 1:  # list all photos
@@ -312,6 +334,9 @@ def main():
         
         elif choice == 6: # remove a photo
             removePhoto(album, input_filename)
+
+        elif choice == 7: # edit a photo's tags
+            editTagsAlbum(album, input_filename)
 
 
     print("Good bye!")
